@@ -7,7 +7,7 @@
 Caffe implementation by using two-layer LSTM structure.
 
 For image example:
-![example](/figure1.png)
+![example](/figure1.PNG)
 
 --------------------------
 
