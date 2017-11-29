@@ -1,8 +1,7 @@
 #!/bin/bash
-GPU_ID=0
-WEIGHTS=./exp-referit/caffemodel/scrc_full_vgg_init.caffemodel
+GPU_ID=2
+WEIGHTS=/home/bskim/workspace/visionAndLanguage/natural-language-object-retrieval/exp-referit/caffemodel/scrc_full_vgg_init.caffemodel
 
-caffe train \
-    -solver ./prototxt/scrc_full_vgg_solver.prototxt \
-    -weights $WEIGHTS \
-    -gpu $GPU_ID 2>&1
+/home/user01/caffe/build/tools/caffe train \
+    -solver /home/bskim/workspace/visionAndLanguage/natural-language-object-retrieval/prototxt/scrc_full_vgg_solver.prototxt \
+    -weights /home/bskim/workspace/visionAndLanguage/natural-language-object-retrieval/exp-referit/caffemodel/scrc_full_vgg_init.caffemodel

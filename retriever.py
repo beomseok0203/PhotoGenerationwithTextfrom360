@@ -125,6 +125,7 @@ def crop_edge_boxes(image, edge_boxes):
         image = np.tile(image[..., np.newaxis], (1, 1, 3))
     # RGBA to RGB
     image = image[:, :, :3]
+    #print (edge_boxes)
     x1, y1, x2, y2 = edge_boxes[:, 0], edge_boxes[:, 1], edge_boxes[:, 2], edge_boxes[:, 3]
     crops = [image[y1[n]:y2[n]+1, x1[n]:x2[n]+1, :] for n in range(edge_boxes.shape[0])]
     return crops
@@ -181,7 +182,41 @@ def compute_spatial_feat(bboxes, image_size):
     feats[:, 4] = (feats[:, 0] + feats[:, 2]) / 2  # x0
     feats[:, 5] = (feats[:, 1] + feats[:, 3]) / 2  # y0
     feats[:, 6] = feats[:, 2] - feats[:, 0]  # w
-    feats[:, 7] = feats[:, 3] - feats[:, 1]  # h
+    feats[:, 7] = feats[:, 3] - feats[:, 1]  # h\
+    #feats[:, 6] = (feats[:, 2] - feats[:, 0])/ (feats[:, 3] - feats[:, 1]) # w/h -aspect ratio
+    #feats[:, 7] = (feats[:, 3] - feats[:, 1])/feats[:, 2] - feats[:, 0]  # h/w
+    return feats
+
+# normalize bounding box features into 8-D feature
+def compute_bbox_feat(bboxes, image_size):
+    if bboxes.ndim == 1:
+        bboxes = bboxes.reshape((1, 4))
+    im_w = image_size[0]
+    im_h = image_size[1]
+    assert(np.all(bboxes[:, 0] < im_w) and np.all(bboxes[:, 2] < im_w))
+    assert(np.all(bboxes[:, 1] < im_h) and np.all(bboxes[:, 3] < im_h))
+
+    feats = np.zeros((bboxes.shape[0], 8))
+    feats[:, 0] =0
+    feats[:, 1] =0
+    feats[:, 2] =0
+    feats[:, 3] =0
+    a0= bboxes[:, 0] * 2.0 / im_w - 1  # x1;
+    a1= bboxes[:, 1] * 2.0 / im_h - 1  # y1;
+    a2= bboxes[:, 2] * 2.0 / im_w - 1  # x2;
+    a3= bboxes[:, 3] * 2.0 / im_h - 1  # y2;
+    feats[:, 4] = (a2- a0)/2  # bounding box wide size
+    feats[:, 5] = (a3- a1)/2 # bounding box height size
+    #if ((a3- a1)!=0):
+    feats[:, 6] = (a2- a0)/ (a3- a1) # w/h
+    #else:
+    #    feats[:, 6] = 1;
+    #if((a2 - a0)!=0):
+    feats[:, 7] = (a3 - a1) / (a2 -a0)# h/w
+    #else :
+    #   feats[:, 7] = 1;
+    #feats[:, 6] = (feats[:, 2] - feats[:, 0])/ (feats[:, 3] - feats[:, 1]) # w/h -aspect ratio
+    #feats[:, 7] = (feats[:, 3] - feats[:, 1])/feats[:, 2] - feats[:, 0]  # h/w
     return feats
 
 # Write a batch of sentences to HDF5

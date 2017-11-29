@@ -40,7 +40,8 @@ for imcrop_name, des in query_dict.iteritems():
         continue
     imsize = np.array(imsize_dict[imname])
     bbox = np.array(imcrop_bbox_dict[imcrop_name])
-    bbox_feat = retriever.compute_spatial_feat(bbox, imsize)
+    #bbox_feat = retriever.compute_spatial_feat(bbox, imsize)
+    bbox_feat = retriever.compute_bbox_feat(bbox, imsize)
     context_feature = np.load(cached_context_features_dir + imname + '_fc7.npy')
     train_pairs += [(imcrop_name, d, bbox_feat, imname, context_feature) for d in des]
 

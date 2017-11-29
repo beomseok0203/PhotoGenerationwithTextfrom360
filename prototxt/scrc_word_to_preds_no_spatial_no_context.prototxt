@@ -28,7 +28,7 @@ layer {
 }
 layer {
   name: "lstm2"
-  type: "LSTM"
+  type: "LSTM"z`
   bottom: "lstm1"
   bottom: "cont_sentence"
   bottom: "image_features"

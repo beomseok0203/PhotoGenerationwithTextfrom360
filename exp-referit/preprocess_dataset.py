@@ -84,7 +84,7 @@ def load_and_resize_imcrop(mask_dir, image_dir, resized_imcrop_dir):
         save_path = resized_imcrop_dir + imcrop_name + '.png'
         skimage.io.imsave(save_path, resized_im)
     return imcrop_bbox_dict
-
+1
 
 def main():
     image_dir = './datasets/ReferIt/ImageCLEF/images/'

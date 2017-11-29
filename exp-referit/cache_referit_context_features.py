@@ -5,6 +5,7 @@ import os
 import numpy as np
 import skimage.io
 sys.path.append('./external/caffe-natural-language-object-retrieval/python/')
+#sys.path.append('/home/user01/caffe/python')
 sys.path.append('./external/caffe-natural-language-object-retrieval/examples/coco_caption/')
 import caffe
 

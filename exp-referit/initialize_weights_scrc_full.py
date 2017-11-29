@@ -3,6 +3,7 @@ from __future__ import division, print_function
 import sys
 import numpy as np
 sys.path.append('./external/caffe-natural-language-object-retrieval/python/')
+#sys.path.append('/home/user01su/caffe/python')
 import caffe
 
 old_prototxt = './prototxt/coco_pretrained.prototxt'

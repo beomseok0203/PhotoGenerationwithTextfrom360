@@ -24,12 +24,13 @@ use_context = True
 
 if use_context:
     lstm_net_proto = './prototxt/scrc_word_to_preds_full.prototxt'
-    pretrained_weights_path = './models/scrc_full_vgg.caffemodel'
+    #pretrained_weights_path = './models/scrc_full_vgg.caffemodel'
+    pretrained_weights_path = './exp-referit/caffemodel/scrc_full_vgg_iter_90000.caffemodel'
 else:
     lstm_net_proto = './prototxt/scrc_word_to_preds_no_context.prototxt'
     pretrained_weights_path = './models/scrc_no_context_vgg.caffemodel'
 
-gpu_id = 0  # the GPU to test the SCRC model
+gpu_id = 0 # the GPU to test the SCRC model
 correct_IoU_threshold = 0.5
 
 tst_imlist_file = './data/split/referit_test_imlist.txt'
@@ -103,7 +104,7 @@ for n_im in range(num_im):
     # Compute local descriptors (local image feature + spatial feature)
     descriptors = retriever.compute_descriptors_edgebox(captioner, im,
                                                         candidate_boxes)
-    spatial_feats = retriever.compute_spatial_feat(candidate_boxes, imsize)
+    spatial_feats = retriever.compute_bbox_feat(candidate_boxes, imsize)
     descriptors = np.concatenate((descriptors, spatial_feats), axis=1)
 
     num_imcrop = len(imcrop_names)
@@ -145,3 +146,27 @@ print('Final recall on the whole test set')
 for k in [0, 10-1]:
     print('\trecall @ %d = %f' % (k+1, topK_correct_num[k]/total_num))
 ################################################################################
+################################################################################
+# Test top-1 precision
+correct_num = 0
+total_num = 0
+for n_im in range(num_im):
+    print('testing image %d / %d' % (n_im, num_im))
+    imname = imlist[n_im]
+    for sentence in query_dict[imname]:
+        # compute test image (target object) score given the description sentence
+        obj_score = retriever.score_descriptors(obj_descriptors[n_im:n_im+1, :],
+                                                sentence, captioner, vocab_dict)[0]
+        # compute distractor scores given the description sentence
+        dis_idx = distractor_ids_per_im[imname]
+        dis_scores = retriever.score_descriptors(dis_descriptors[dis_idx, :],
+                                                 sentence, captioner, vocab_dict)
+
+        # for a retrieval to be correct, the object image must score higher than
+        # all distractor images
+        correct_num += np.all(obj_score > dis_scores)
+        total_num += 1
+
+print('Top-1 precision on the whole test set: %f' % (correct_num/total_num))
+################################################################################
+
