@@ -7,7 +7,7 @@
 Caffe implementation by using two-layer LSTM structure.
 
 For image example:
-!(/figure1.png)
+![example](./figure1.png)
 
 --------------------------
 
@@ -15,8 +15,7 @@ For image example:
 - Caffe 
 - Opencv
 
-## Getting Started
-### Installation
+## Demo
 1. Install Caffe supporting RNN layers 
    -Run ./external/download_caffe.sh
    -Build caffe and pycaffe (http://caffe.berkeleyvision.org/installation.html) 
